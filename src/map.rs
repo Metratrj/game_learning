@@ -3,7 +3,7 @@ use rand::Rng;
 pub struct Map {
     pub width: usize,
     pub height: usize,
-    tiles: Vec<char>,
+    pub tiles: Vec<char>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -127,7 +127,6 @@ impl Map {
         self.get_tile(x, y) != '#'
     }
 
-    #[allow(dead_code)]
     fn apply_room_to_map(tiles: &mut Vec<char>, width: usize, room: &Rect) {
         for y in room.y1..room.y2 {
             for x in room.x1..room.x2 {
@@ -136,6 +135,7 @@ impl Map {
         }
     }
 
+    #[allow(dead_code)]
     fn apply_room_to_map_roomidx(tiles: &mut Vec<char>, width: usize, room: &Rect, room_idx: u32) {
         for y in room.y1..room.y2 {
             for x in room.x1..room.x2 {
@@ -183,6 +183,7 @@ impl Map {
     }
 }
 
+#[allow(dead_code)]
 fn distance(x1: usize, y1: usize, (x2, y2): (usize, usize)) -> usize {
     let dx = if x1 > x2 { x1 - x2 } else { x2 - x1 };
     let dy = if y1 > y2 { y1 - y2 } else { y2 - y1 };
