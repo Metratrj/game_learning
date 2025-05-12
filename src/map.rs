@@ -38,8 +38,8 @@ impl Map {
         let mut tiles = vec!['#'; width * height];
         let mut rooms: Vec<Rect> = Vec::new();
         let max_rooms = 30;
-        let min_size = 5;
-        let max_size = 10;
+        let min_size = 10;
+        let max_size = 25;
 
         let mut rng = rand::rng();
 
@@ -82,24 +82,6 @@ impl Map {
             start_x,
             start_y,
         )
-        /* let mut tiles = vec!['.'; width * height];
-
-        // Rand
-        for x in 0..width {
-            tiles[x] = '#';
-            tiles[x + (height - 1) * width] = '#';
-        }
-
-        for y in 0..height {
-            tiles[y * width] = '#';
-            tiles[y * width + (width - 1)] = '#';
-        }
-
-        Self {
-            width,
-            height,
-            tiles,
-        } */
     }
 
     pub fn get_tile(&self, x: usize, y: usize) -> char {
@@ -110,10 +92,19 @@ impl Map {
         self.get_tile(x, y) != '#'
     }
 
+    #[allow(dead_code)]
     fn apply_room_to_map(tiles: &mut Vec<char>, width: usize, room: &Rect) {
         for y in room.y1..room.y2 {
             for x in room.x1..room.x2 {
                 tiles[y * width + x] = '.';
+            }
+        }
+    }
+
+    fn apply_room_to_map_roomidx(tiles: &mut Vec<char>, width: usize, room: &Rect, room_idx: u32) {
+        for y in room.y1..room.y2 {
+            for x in room.x1..room.x2 {
+                tiles[y * width + x] = char::from_digit(room_idx, 100).unwrap();
             }
         }
     }
