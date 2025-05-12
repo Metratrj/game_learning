@@ -23,10 +23,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         SetBackgroundColor(crossterm::style::Color::Black),
         SetForegroundColor(crossterm::style::Color::White)
     )?;
-    /* print!("Enter map width: ");
-    let mut buffer = String::new();
-    stdin().read_line(&mut buffer)?; */
 
+    // Default 40 x 20
     let mut game = game::Game::new(180, 40);
 
     game.draw();

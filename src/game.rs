@@ -1,25 +1,49 @@
 use std::io::{Write, stdout};
 
-use crossterm::{
-    ExecutableCommand, cursor, execute,
-    style::{Colors, SetColors, SetForegroundColor},
-};
+use crossterm::{ExecutableCommand, cursor, execute, style::SetForegroundColor};
+use rand::Rng;
 
 use crate::{input::read_direction, map::Map};
 
 pub struct Game {
-    map: Map,
-    player_x: usize,
-    player_y: usize,
+    pub map: Map,
+    pub player_x: usize,
+    pub player_y: usize,
+    pub loot: Vec<LootItem>,
+}
+
+pub struct LootItem {
+    pub x: usize,
+    pub y: usize,
+    pub symbol: char,
 }
 
 impl Game {
     pub fn new(map_w: usize, map_h: usize) -> Self {
         let (map, player_x, player_y) = Map::new(map_w, map_h);
+        let mut loot = Vec::new();
+
+        let mut rng = rand::rng();
+        for _ in 0..10 {
+            let mut tries = 0;
+            loop {
+                let x = rng.random_range(1..map.width - 1);
+                let y = rng.random_range(1..map.height - 1);
+                if map.is_walkable(x, y) && (x, y) != (player_x, player_y) {
+                    loot.push(LootItem { x, y, symbol: '!' });
+                    break;
+                }
+                tries += 1;
+                if tries > 100 {
+                    break;
+                }
+            }
+        }
         Self {
             map,
             player_x,
             player_y,
+            loot,
         }
     }
 
