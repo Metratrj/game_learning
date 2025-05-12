@@ -1,6 +1,9 @@
 use std::io::{Write, stdout};
 
-use crossterm::{ExecutableCommand, cursor};
+use crossterm::{
+    ExecutableCommand, cursor, execute,
+    style::{Colors, SetColors, SetForegroundColor},
+};
 
 use crate::{input::read_direction, map::Map};
 
@@ -28,7 +31,11 @@ impl Game {
             stdout.execute(cursor::MoveTo(0, y as u16)).unwrap();
             for x in 0..self.map.width {
                 if x == self.player_x && y == self.player_y {
+                    execute!(stdout, SetForegroundColor(crossterm::style::Color::Green))
+                        .expect("Couldn't set text color");
                     print!("@");
+                    execute!(stdout, SetForegroundColor(crossterm::style::Color::White))
+                        .expect("Couldn't set text color");
                 } else {
                     print!("{}", self.map.get_tile(x, y));
                 }

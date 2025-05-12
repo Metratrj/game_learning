@@ -2,15 +2,13 @@ mod game;
 mod input;
 mod map;
 
-use std::{
-    io::{stdin, stdout},
-    time::Duration,
-};
+use std::{io::stdout, time::Duration};
 
 use crossterm::{
     cursor,
     event::{Event, KeyCode, poll, read},
     execute,
+    style::{SetBackgroundColor, SetForegroundColor},
     terminal::{self, Clear},
 };
 
@@ -20,12 +18,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     terminal::enable_raw_mode().expect("Failed to enable");
     let mut stdout = stdout();
     execute!(stdout, Clear(terminal::ClearType::All), cursor::Hide)?;
-
+    execute!(
+        stdout,
+        SetBackgroundColor(crossterm::style::Color::Black),
+        SetForegroundColor(crossterm::style::Color::White)
+    )?;
     /* print!("Enter map width: ");
     let mut buffer = String::new();
     stdin().read_line(&mut buffer)?; */
 
-    let mut game = game::Game::new(80, 25);
+    let mut game = game::Game::new(180, 40);
 
     game.draw();
 
