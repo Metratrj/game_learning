@@ -2,10 +2,13 @@ mod game;
 mod input;
 mod map;
 
-use std::{io::stdout, time::Duration};
+use std::{
+    io::{stdin, stdout},
+    time::Duration,
+};
 
 use crossterm::{
-    ExecutableCommand, cursor,
+    cursor,
     event::{Event, KeyCode, poll, read},
     execute,
     terminal::{self, Clear},
@@ -18,7 +21,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
     execute!(stdout, Clear(terminal::ClearType::All), cursor::Hide)?;
 
-    let mut game = game::Game::new();
+    /* print!("Enter map width: ");
+    let mut buffer = String::new();
+    stdin().read_line(&mut buffer)?; */
+
+    let mut game = game::Game::new(80, 25);
 
     game.draw();
 

@@ -34,7 +34,7 @@ impl Rect {
 }
 
 impl Map {
-    pub fn new(width: usize, height: usize) -> Self {
+    pub fn new(width: usize, height: usize) -> (Self, usize, usize) {
         let mut tiles = vec!['#'; width * height];
         let mut rooms: Vec<Rect> = Vec::new();
         let max_rooms = 30;
@@ -72,11 +72,16 @@ impl Map {
             }
         }
 
-        Self {
-            width,
-            height,
-            tiles,
-        }
+        let (start_x, start_y) = rooms[0].center();
+        (
+            Self {
+                width,
+                height,
+                tiles,
+            },
+            start_x,
+            start_y,
+        )
         /* let mut tiles = vec!['.'; width * height];
 
         // Rand

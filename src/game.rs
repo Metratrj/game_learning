@@ -11,11 +11,12 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new() -> Self {
+    pub fn new(map_w: usize, map_h: usize) -> Self {
+        let (map, player_x, player_y) = Map::new(map_w, map_h);
         Self {
-            map: Map::new(40, 20),
-            player_x: 5,
-            player_y: 5,
+            map,
+            player_x,
+            player_y,
         }
     }
 
@@ -52,6 +53,8 @@ impl Game {
         }
     }
 
+    /// Returns the update of this [`Game`].
+    #[allow(dead_code)]
     pub fn update(&mut self) -> bool {
         match read_direction() {
             Some((dx, dy)) => {
