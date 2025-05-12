@@ -2,26 +2,48 @@ mod game;
 mod input;
 mod map;
 
-use std::io::stdout;
+use std::{io::stdout, time::Duration};
 
-use crossterm::{ExecutableCommand, terminal};
+use crossterm::{
+    ExecutableCommand, cursor,
+    event::{Event, KeyCode, poll, read},
+    execute,
+    terminal::{self, Clear},
+};
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Hello, world!");
 
     terminal::enable_raw_mode().expect("Failed to enable");
-    stdout()
-        .execute(terminal::Clear(terminal::ClearType::All))
-        .unwrap();
+    let mut stdout = stdout();
+    execute!(stdout, Clear(terminal::ClearType::All), cursor::Hide)?;
 
     let mut game = game::Game::new();
 
+    game.draw();
+
     loop {
-        game.draw();
-        if !game.update() {
-            break;
+        if poll(Duration::from_millis(50))? {
+            if let Event::Key(key_event) = read()? {
+                match key_event.code {
+                    KeyCode::Char('w') => game.move_player(0, -1),
+                    KeyCode::Char('s') => game.move_player(0, 1),
+                    KeyCode::Char('a') => game.move_player(-1, 0),
+                    KeyCode::Char('d') => game.move_player(1, 0),
+                    KeyCode::Char('q') => break,
+                    _ => {}
+                }
+
+                game.draw();
+            }
         }
     }
 
-    terminal::disable_raw_mode().expect("Failed to disable raw mode")
+    terminal::disable_raw_mode().expect("Failed to disable raw mode");
+    execute!(stdout, cursor::Show)?;
+    Ok(())
+    /*  game.draw();
+    if !game.update() {
+        break;
+    } */
 }

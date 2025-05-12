@@ -42,6 +42,16 @@ impl Game {
         stdout.flush().unwrap();
     }
 
+    pub fn move_player(&mut self, x: isize, y: isize) {
+        let new_x = (self.player_x as isize + x) as usize;
+        let new_y = (self.player_y as isize + y) as usize;
+
+        if self.map.is_walkable(new_x, new_y) {
+            self.player_x = new_x;
+            self.player_y = new_y;
+        }
+    }
+
     pub fn update(&mut self) -> bool {
         match read_direction() {
             Some((dx, dy)) => {
