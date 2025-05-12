@@ -1,5 +1,7 @@
 use crossterm::event::{Event, KeyCode, KeyEvent, read};
 
+/// Reads KeyEvents returns relative movement or None when quitted
+#[allow(dead_code)]
 pub fn read_direction() -> Option<(isize, isize)> {
     if let Ok(Event::Key(KeyEvent { code, .. })) = read() {
         match code {
