@@ -1,10 +1,6 @@
 use rand::Rng;
 
-pub struct Map {
-    pub width: usize,
-    pub height: usize,
-    pub tiles: Vec<char>,
-}
+use crate::types::Vector;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Rect {
@@ -33,8 +29,15 @@ impl Rect {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct Map {
+    pub width: usize,
+    pub height: usize,
+    tiles: Vec<char>,
+}
+
 impl Map {
-    pub fn new(width: usize, height: usize) -> (Self, usize, usize) {
+    pub fn new(width: usize, height: usize) -> (Self, Vector<usize>) {
         let mut tiles = vec!['#'; width * height];
         let mut rooms: Vec<Rect> = Vec::new();
         let max_rooms = 30;
@@ -74,34 +77,6 @@ impl Map {
                         Self::apply_horizontal_tunnel(&mut tiles, width, prev_x, new_x, new_y);
                     }
                 }
-
-                // Verbindung zum nächstgelegenen Raum statt nur zum letzten
-                /* if !rooms.is_empty() {
-                    let (new_x, new_y) = new_room.center();
-                    let mut closest = &rooms[0];
-                    let mut closest_dist = distance(new_x, new_y, closest.center());
-
-                    for other in &rooms {
-                        let (ox, oy) = other.center();
-                        let dist = distance(new_x, new_y, (ox, oy));
-                        if dist < closest_dist {
-                            closest = other;
-                            closest_dist = dist;
-                        }
-                    }
-
-                    let (cx, cy) = closest.center();
-
-                    if rng.random_bool(0.5) {
-                        Self::apply_horizontal_tunnel(&mut tiles, width, cx, new_x, cy);
-                        Self::apply_vertical_tunnel(&mut tiles, width, cy, new_y, new_x);
-                    } else {
-                        Self::apply_horizontal_tunnel(&mut tiles, width, cy, new_y, cx);
-                        Self::apply_vertical_tunnel(&mut tiles, width, cx, new_x, new_y);
-                    }
-                }
-                 */
-
                 rooms.push(new_room);
                 prev_center = Some((new_x, new_y)); // Nur wenn Raum erfolgreich eingefügt wurde
             }
@@ -114,8 +89,10 @@ impl Map {
                 height,
                 tiles,
             },
-            start_x,
-            start_y,
+            Vector {
+                x: start_x,
+                y: start_y,
+            },
         )
     }
 

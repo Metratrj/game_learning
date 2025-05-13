@@ -1,6 +1,7 @@
 mod game;
 mod input;
 mod map;
+mod types;
 
 use std::{
     collections::HashMap,
@@ -12,7 +13,7 @@ use crossterm::{
     cursor,
     event::{Event, KeyCode, KeyEvent, poll, read},
     execute,
-    style::{SetBackgroundColor, SetForegroundColor},
+    style::SetForegroundColor,
     terminal::{self, Clear},
 };
 
@@ -22,16 +23,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     terminal::enable_raw_mode().expect("Failed to enable");
     let mut stdout = stdout();
     execute!(stdout, Clear(terminal::ClearType::All), cursor::Hide)?;
-    execute!(
-        stdout,
-        SetBackgroundColor(crossterm::style::Color::Black),
-        SetForegroundColor(crossterm::style::Color::White)
-    )?;
+    execute!(stdout, SetForegroundColor(crossterm::style::Color::White))?;
 
     // Default 40 x 20
-    let mut game = game::Game::new(180, 40);
+    let mut game = game::Game::new(60, 20);
 
-    game.draw();
+    game.draw()?;
 
     loop {
         let start = Instant::now();
@@ -56,7 +53,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         _ => {}
                     }
                     last_input_time.insert(code, now);
-                    game.draw();
+                    game.draw()?;
                 }
             }
         }
@@ -72,8 +69,4 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     terminal::disable_raw_mode().expect("Failed to disable raw mode");
     execute!(stdout, cursor::Show)?;
     Ok(())
-    /*  game.draw();
-    if !game.update() {
-        break;
-    } */
 }
