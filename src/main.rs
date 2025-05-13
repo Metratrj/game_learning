@@ -31,39 +31,39 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     game.draw()?;
 
     loop {
-        let start = Instant::now();
+        //let start = Instant::now();
 
-        let mut last_input_time: HashMap<KeyCode, Instant> = HashMap::new();
-        let input_delay = Duration::from_millis(100); // 100ms between inputs
+        //let mut last_input_time: HashMap<KeyCode, Instant> = HashMap::new();
+        //let input_delay = Duration::from_millis(100); // 100ms between inputs
 
         if poll(Duration::from_millis(10))? {
-            if let Event::Key(KeyEvent { code, .. }) = read()? {
-                let now = Instant::now();
+            if let Event::Key(/* KeyEvent { code, .. } */ key_event) = read()? {
+                /* let now = Instant::now();
                 let allowed = last_input_time
-                    .get(&code)
-                    .map_or(true, |&t| now - t > input_delay);
-
-                if allowed {
-                    match code {
-                        KeyCode::Char('w') => game.move_player(0, -1),
-                        KeyCode::Char('s') => game.move_player(0, 1),
-                        KeyCode::Char('a') => game.move_player(-1, 0),
-                        KeyCode::Char('d') => game.move_player(1, 0),
-                        KeyCode::Char('q') => break,
-                        _ => {}
-                    }
-                    last_input_time.insert(code, now);
-                    game.draw()?;
+                                    .get(&key_event.code)
+                                    .map_or(true, |&t| now - t > input_delay);
+                */
+                // if allowed {
+                match key_event.code {
+                    KeyCode::Char('w') => game.move_player(0, -1),
+                    KeyCode::Char('s') => game.move_player(0, 1),
+                    KeyCode::Char('a') => game.move_player(-1, 0),
+                    KeyCode::Char('d') => game.move_player(1, 0),
+                    KeyCode::Char('q') => break,
+                    _ => {}
                 }
+                // last_input_time.insert(key_event.code, now);
+                game.draw()?;
+                // }
             }
         }
 
-        let elapsed = start.elapsed();
-        let target_frame_time = Duration::from_millis(33);
+        //let elapsed = start.elapsed();
+        //let target_frame_time = Duration::from_millis(33);
 
-        if elapsed < target_frame_time {
-            std::thread::sleep(target_frame_time - elapsed);
-        }
+        //if elapsed < target_frame_time {
+        //    std::thread::sleep(target_frame_time - elapsed);
+        //}
     }
 
     terminal::disable_raw_mode().expect("Failed to disable raw mode");
