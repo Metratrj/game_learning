@@ -30,18 +30,22 @@ impl Player {
         }
     }
 
+    #[allow(dead_code)]
     pub fn get_pos(&self) -> &Vector<usize> {
         &self.pos
     }
 
+    #[allow(dead_code)]
     pub fn set_pos(&mut self, pos: Vector<usize>) {
         self.pos = pos;
     }
 
+    #[allow(dead_code)]
     pub fn get_inventory(&self) -> &Vec<LootItem> {
         &self.inventory
     }
 
+    #[allow(dead_code)]
     pub fn set_inventory(&mut self, inv: Vec<LootItem>) {
         self.inventory = inv;
     }
@@ -82,7 +86,7 @@ impl Game {
         let inventory: Vec<LootItem> = Vec::new();
         let log: Vec<String> = Vec::new();
 
-        let player: Player = Player { pos, inventory };
+        let player = Player::new(pos, inventory);
 
         Self {
             map,
@@ -92,15 +96,14 @@ impl Game {
         }
     }
 
-    pub fn draw(&self) -> core::result::Result<(), io::Error> {
+    pub fn draw(&self) -> Result<(), io::Error> {
         let mut stdout = stdout();
         execute!(
             stdout,
             cursor::Hide,
             cursor::MoveTo(0, 0),
-            //Clear(crossterm::terminal::ClearType::All)
-        )
-        .unwrap();
+            //Clear(crossterm::terminal::ClearType::All) // Removed because it triggers
+        )?;
 
         for y in 0..self.map.height {
             for x in 0..self.map.width {

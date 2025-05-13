@@ -4,14 +4,13 @@ mod map;
 mod types;
 
 use std::{
-    collections::HashMap,
     io::{Write, stdout},
     time::{Duration, Instant},
 };
 
 use crossterm::{
     cursor,
-    event::{Event, KeyCode, KeyEvent, poll, read},
+    event::{Event, KeyCode, poll, read},
     execute,
     style::SetForegroundColor,
     terminal::{self, Clear},
