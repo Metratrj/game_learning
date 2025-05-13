@@ -5,7 +5,7 @@ mod types;
 
 use std::{
     collections::HashMap,
-    io::stdout,
+    io::{Write, stdout},
     time::{Duration, Instant},
 };
 
@@ -30,7 +30,27 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     game.draw()?;
 
+    let mut last_fps = Instant::now();
+    let mut frames = 0;
+    let mut ticks = 0;
+
     loop {
+        // Game logic tick
+        ticks += 1;
+
+        // Drawing
+        frames += 1;
+
+        // Render every second FPS and TPS
+        if last_fps.elapsed() >= Duration::from_secs(1) {
+            let mut lock = std::io::stdout().lock();
+            writeln!(lock, "FPS: {}, TPS: {}", frames, ticks).unwrap();
+            //println!("FPS: {}, TPS: {}", frames, ticks);
+            frames = 0;
+            ticks = 0;
+            last_fps = Instant::now();
+        }
+
         //let start = Instant::now();
 
         //let mut last_input_time: HashMap<KeyCode, Instant> = HashMap::new();
